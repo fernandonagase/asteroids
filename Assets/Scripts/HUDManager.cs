@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
@@ -11,6 +9,8 @@ public class HUDManager : MonoBehaviour
     private Text scoreText = null;
     [SerializeField]
     private Text ammoText = null;
+    [SerializeField]
+    private Text gameOverText = null;
 
     public void UpdateLifeBar(int life, int maxLife)
     {
@@ -25,5 +25,10 @@ public class HUDManager : MonoBehaviour
     public void UpdateAmmo(int ammo)
     {
         ammoText.text = $"Ammo: {ammo}";
+    }
+
+    public void ToggleGameOver(bool isGameOver)
+    {
+        gameOverText.gameObject.SetActive(isGameOver);
     }
 }

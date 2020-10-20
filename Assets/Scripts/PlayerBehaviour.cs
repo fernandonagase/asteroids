@@ -3,13 +3,15 @@
 public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
 {
     private const int INITIAL_HEALTH = 3;
+    private const int INITIAL_AMMO = 10;
 
     private float thrust = 12f;
     private float torque = 4f;
     private int health = INITIAL_HEALTH;
-    private int ammo = 10;
+    private int ammo = INITIAL_AMMO;
 
     private Rigidbody2D rb2d;
+    private GameManager gameManager;
 
     [SerializeField]
     private GameObject bulletPrefab = null;
@@ -20,6 +22,9 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
     {
         rb2d = GetComponent<Rigidbody2D>();
         firespot = GameObject.FindWithTag("Firespot");
+
+        gameManager = GameObject.FindWithTag("GameManager")
+            .GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -27,12 +32,23 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Shoot();
+            if (gameManager.IsGameOver)
+            {
+                FactoryReset();
+            }
+            else
+            {
+                Shoot();
+            }
         }
     }
 
     void FixedUpdate()
     {
+        if (gameManager.IsGameOver) {
+            return;
+        }
+
         float force = Input.GetAxis("Vertical");
         float rotation = Input.GetAxisRaw("Horizontal");
 
@@ -86,6 +102,13 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
 
     public void TakeDamage(int damage)
     {
+        if (GameObject.FindWithTag("GameManager")
+            .GetComponent<GameManager>()
+            .IsGameOver
+        ) {
+            return;
+        }
+
         health -= damage;
         GameObject.FindWithTag("HUD")
             .GetComponent<HUDManager>()
@@ -100,5 +123,28 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
     {
         transform.position = Vector3.zero;
         rb2d.velocity = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+
+        ToggleGameOver();
+    }
+
+    public void FactoryReset()
+    {
+        health = INITIAL_HEALTH;
+        ammo = INITIAL_AMMO;
+
+        HUDManager hudManager = GameObject.FindWithTag("HUD")
+            .GetComponent<HUDManager>();
+        hudManager.UpdateLifeBar(health, INITIAL_HEALTH);
+        hudManager.UpdateAmmo(ammo);
+        gameManager.ResetGame();
+        gameManager.ToggleGameOver();
+    }
+
+    private void ToggleGameOver()
+    {
+        GameManager gameManager = GameObject.FindWithTag("GameManager")
+            .GetComponent<GameManager>();
+        gameManager.ToggleGameOver();
     }
 }
