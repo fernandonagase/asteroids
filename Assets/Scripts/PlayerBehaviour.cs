@@ -75,13 +75,13 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
 
     public bool ReloadAmmo(int count)
     {
-        if (ammo <= 5)
-        {
-            ammo += count;
-            return true;
-        }
+        if (ammo == 10) return false;
 
-        return false;
+        ammo += (ammo <= 10 - count ? count : (10 - ammo));
+        GameObject.FindWithTag("HUD")
+            .GetComponent<HUDManager>()
+            .UpdateAmmo(ammo);
+        return true;
     }
 
     public void TakeDamage(int damage)

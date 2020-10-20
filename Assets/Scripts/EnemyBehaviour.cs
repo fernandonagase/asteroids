@@ -69,4 +69,14 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable, IDestructible
             .GetComponent<EnemySpawner>()
             .FreeEnemyShip(gameObject);
     }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Player"))
+        {
+            return;
+        }
+
+        collision.GetComponent<IDamageable>().TakeDamage(1);
+    }
 }
