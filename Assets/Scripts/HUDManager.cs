@@ -9,6 +9,8 @@ public class HUDManager : MonoBehaviour
     private Image contentLifebar = null;
     [SerializeField]
     private Text scoreText = null;
+    [SerializeField]
+    private Text ammoText = null;
 
     public void UpdateLifeBar(int life, int maxLife)
     {
@@ -18,5 +20,10 @@ public class HUDManager : MonoBehaviour
     public void UpdateScore(int score)
     {
         scoreText.text = $"Score: {score}";
+    }
+
+    public void UpdateAmmo(int ammo)
+    {
+        ammoText.text = $"Ammo: {ammo}";
     }
 }

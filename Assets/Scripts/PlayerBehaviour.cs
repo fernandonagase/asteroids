@@ -62,7 +62,9 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
             firespot.transform.position,
             transform.rotation
         );
-        ammo--;
+        GameObject.FindWithTag("HUD")
+            .GetComponent<HUDManager>()
+            .UpdateAmmo(--ammo);
     }
 
     private void Recoil()
