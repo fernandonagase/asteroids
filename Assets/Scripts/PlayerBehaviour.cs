@@ -91,12 +91,27 @@ public class PlayerBehaviour : MonoBehaviour, IDamageable, IDestructible
 
     public bool ReloadAmmo(int count)
     {
-        if (ammo == 10) return false;
+        if (ammo == INITIAL_AMMO) return false;
 
-        ammo += (ammo <= 10 - count ? count : (10 - ammo));
+        ammo += (ammo <= INITIAL_AMMO - count ? count : (INITIAL_AMMO - ammo));
         GameObject.FindWithTag("HUD")
             .GetComponent<HUDManager>()
             .UpdateAmmo(ammo);
+        return true;
+    }
+
+    public bool Heal(int quantity)
+    {
+        if (health == INITIAL_HEALTH) return false;
+
+        health += (
+            health <= INITIAL_HEALTH - quantity ?
+                quantity
+                : (INITIAL_HEALTH - quantity)
+        );
+        GameObject.FindWithTag("HUD")
+            .GetComponent<HUDManager>()
+            .UpdateLifeBar(health, INITIAL_HEALTH);
         return true;
     }
 
